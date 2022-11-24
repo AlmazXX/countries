@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Countries from "./components/Countries/Countries";
 import CountryData from "./components/CountryData/CountryData";
 import { ApiCountry } from "./types";
@@ -8,14 +8,13 @@ function App() {
   const [countries, setCountries] = useState<ApiCountry[]>([]);
   const [selectedAlpha, setSelectedAlpha] = useState<null | string>(null);
 
-  const fetchCountries = useCallback(async () => {
-    const countriesResponse = await axios.get<ApiCountry[]>("/all?fields=alpha3Code,name");
-    setCountries(countriesResponse.data);
-  }, []);
-
   useEffect(() => {
+    const fetchCountries = async () => {
+      const countriesResponse = await axios.get<ApiCountry[]>("/all?fields=alpha3Code,name");
+      setCountries(countriesResponse.data);
+    };
     fetchCountries().catch((e) => console.error(e));
-  }, [fetchCountries]);
+  }, []);
 
   const onClickEvent = (alpha: string) => {
     setSelectedAlpha(alpha);
